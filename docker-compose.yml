@@ -1,0 +1,21 @@
+version: '3.1'
+services:
+  web:
+    image: odoo:17.0
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    environment:
+      - HOST="127.X.X." # IP DEL SERVIDOR
+      - PORT=5432 # PUERTO DE LA BASE DE DATOS
+      - USER="myuser" # NOMBRE DE USUARIO DE LA BASE DE DATOS
+      - PASSWORD="myPassword" # CONTRASEÑA DE LA BASE DE DATOS
+      - DATABASE=odoo # NOMBRE DE LA BASE DE DATOS
+    command: -- --config=/etc/odoo/odoo.conf
+    restart: always
+
+volumes:
+  odoo-web-data:

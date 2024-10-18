@@ -1,0 +1,1 @@
+odoo -i base -d myDbName --stop-after-init --db_host=db -r myUserdb -w myPassword
