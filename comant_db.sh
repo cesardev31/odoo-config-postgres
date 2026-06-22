@@ -1,1 +1,4 @@
-odoo -i base -d myDbName --stop-after-init --db_host=db -r myUserdb -w myPassword
+#!/bin/bash
+set -euo pipefail
+
+docker compose exec web odoo -i base -d odoo --stop-after-init --db_host=db -r odoo -w odoo

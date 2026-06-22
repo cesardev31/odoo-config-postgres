@@ -1,21 +1,33 @@
-version: '3.1'
 services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   web:
-    image: odoo:17.0
+    image: odoo:19.0
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "8069:8069"
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
-    environment:
-      - HOST="127.X.X." # IP DEL SERVIDOR
-      - PORT=5432 # PUERTO DE LA BASE DE DATOS
-      - USER="myuser" # NOMBRE DE USUARIO DE LA BASE DE DATOS
-      - PASSWORD="myPassword" # CONTRASEÑA DE LA BASE DE DATOS
-      - DATABASE=odoo # NOMBRE DE LA BASE DE DATOS
-    command: -- --config=/etc/odoo/odoo.conf
-    restart: always
+    command: ["odoo", "--config=/etc/odoo/odoo.conf"]
+    restart: unless-stopped
 
 volumes:
   odoo-web-data:
+  odoo-db-data:
